@@ -1,0 +1,22 @@
+@media (min-width: 14px) {
+  :root{
+  --messages-container-width: 67%;
+  --chats-container-width:33%;
+  }
+}
+
+
+.messages-container{
+  display: flex;
+  width: var(--messages-container-width);
+}
+
+.chats-container{
+  display: flex;
+  width: var(--chats-container-width) !important;
+
+}
+.container{
+  display: flex;
+  align-items: center;
+}

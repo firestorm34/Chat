@@ -1,0 +1,49 @@
+﻿namespace GeneralChat.Server.Repositories
+{
+    public class GenericRepository<TEntity> 
+        where TEntity : class
+    {
+        DbContext context;
+        public GenericRepository(DbContext _context)
+        {
+            context = _context;
+        }
+        public virtual async Task<TEntity> AddAsync(TEntity entity)
+        {
+            await context.Set<TEntity>().AddAsync(entity);
+            return entity;
+
+        }
+
+        public virtual async Task DeleteAsync(int id)
+        {
+            var entity = await context.Set<TEntity>().FindAsync(id);
+            if (entity == null)
+            {
+                return;
+            }
+            context.Remove(entity);
+            return;
+        }
+
+
+        public virtual async Task<TEntity> GetAsync(int id)
+        {
+            return await context.Set<TEntity>().FindAsync(id);
+        }
+
+        public virtual async Task<List<TEntity>> GetAllAsync()
+        {
+            return await context.Set<TEntity>().ToListAsync();
+        }
+
+        public virtual TEntity Update(TEntity entity)
+        {
+
+            context.Update(entity);
+            return entity;
+
+
+        }
+    }
+}
