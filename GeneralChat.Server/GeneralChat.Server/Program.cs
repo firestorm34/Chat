@@ -5,15 +5,29 @@ using Microsoft.AspNetCore.Http.Connections;
 using GeneralChat.Server.Services;
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSignalR();
-builder.Services.AddDbContext<ChatContext>(options=>options.UseNpgsql("Host=localhost;Port=5432;Database=ChatProject;" +
-    "Username=postgres;Password=Password12"));
-builder.Services.AddSingleton<UserServices>();
+
+builder.Services.AddDbContext<ChatContext>(
+options =>
+{
+    options.UseNpgsql("Host=localhost;Port=5432;Database=ChatProject;" +
+    "Username=postgres;Password=Password12"
+    );
+}
+);
+
+//builder.Services.AddDbContextFactory<ChatContext>(options=> options.UseNpgsql("Host=localhost;Port=5432;Database=ChatProject;" +
+//            "Username=postgres;Password=Password12"));
+builder.Services.AddTransient<UnitOfWork>();
+
+builder.Services.AddTransient<UserServices>();
+
 builder.Services.AddIdentity<User, Role>( options => {
         options.Password.RequireNonAlphanumeric = false;
     })

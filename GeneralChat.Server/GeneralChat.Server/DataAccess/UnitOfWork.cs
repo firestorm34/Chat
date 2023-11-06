@@ -4,7 +4,7 @@ namespace GeneralChat.Server.DataAccess
 {
     public class UnitOfWork
     {
-        private DbContext context;
+        public DbContext context;
         public UnitOfWork(DbContext dbContext)
         {
             context = dbContext;

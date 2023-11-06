@@ -10,5 +10,6 @@ namespace GeneralChat.Server.Models
         public string Name { get; set; }
         public DateTime CreationTime { get; set; }
 
+        public virtual User User { get; set; } = new();
     }
 }

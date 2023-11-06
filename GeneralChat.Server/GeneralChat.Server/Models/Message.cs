@@ -15,5 +15,8 @@ namespace GeneralChat.Server.Models
         public int UserId { get; set; }
         public int ChatId { get; set; }
         public bool IsViewed { get; set; }
+
+        public virtual User User { get; set; } = new ();
+        public virtual Chat Chat { get; set; } = new ();
     }
 }
