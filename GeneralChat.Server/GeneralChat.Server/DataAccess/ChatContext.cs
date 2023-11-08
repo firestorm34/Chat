@@ -12,6 +12,7 @@ namespace GeneralChat.Server.DataAccess
         public DbSet<UserInGroup> UserInGroups { get; set; }
         public DbSet<Chat>  Chats { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
         public ChatContext()
         {
 
