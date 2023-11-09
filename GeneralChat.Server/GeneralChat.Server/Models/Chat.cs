@@ -7,6 +7,7 @@ namespace GeneralChat.Server.Models
         [Required]
         [Key]
         public int Id { get; set; }
+
         public DateTime CreateTime { get; set; }
         public int FirstUserId { get; set; }
         public int SecondUserId { get; set; }

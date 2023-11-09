@@ -13,6 +13,7 @@ namespace GeneralChat.Server.DataAccess
         public DbSet<Chat>  Chats { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Contact> Contacts { get; set; }
+        public DbSet<UnreadMessage> UnreadMessages { get; set; }
         public ChatContext()
         {
 

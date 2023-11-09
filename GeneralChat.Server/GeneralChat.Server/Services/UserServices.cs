@@ -20,6 +20,7 @@ namespace GeneralChat.Server.Services
         }
 
 
+
         public async Task<User> GetAsync(int id)
         {
             return await unit.UserRepository.GetAsync(id);

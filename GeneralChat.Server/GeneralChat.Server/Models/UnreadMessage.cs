@@ -3,13 +3,11 @@ global using System.ComponentModel.DataAnnotations;
 
 namespace GeneralChat.Server.Models
 {
-    public class User : IdentityUser<int>
+    public class UnreadMessage
     {
         [Required]
-
-        public string Nickname { get; set; }
-
-
-
+        public int UserId { get; set; }
+        public int MessageId { get; set; }
+        public int ChatId { get; set; }
     }
 }

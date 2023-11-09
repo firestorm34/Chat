@@ -3,6 +3,7 @@ using System;
 using GeneralChat.Server.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GeneralChat.Server.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    partial class ChatContextModelSnapshot : ModelSnapshot
+    [Migration("20231108123111_AddedContacts")]
+    partial class AddedContacts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,17 +67,7 @@ namespace GeneralChat.Server.Migrations
                     b.Property<int>("ContactId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ContactUserId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("OwnerId1")
-                        .HasColumnType("integer");
-
                     b.HasKey("OwnerId");
-
-                    b.HasIndex("ContactUserId");
-
-                    b.HasIndex("OwnerId1");
 
                     b.ToTable("Contacts");
                 });
@@ -376,25 +368,6 @@ namespace GeneralChat.Server.Migrations
                     b.Navigation("User1");
 
                     b.Navigation("User2");
-                });
-
-            modelBuilder.Entity("GeneralChat.Server.Models.Contact", b =>
-                {
-                    b.HasOne("GeneralChat.Server.Models.User", "ContactUser")
-                        .WithMany()
-                        .HasForeignKey("ContactUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GeneralChat.Server.Models.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ContactUser");
-
-                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("GeneralChat.Server.Models.Group", b =>

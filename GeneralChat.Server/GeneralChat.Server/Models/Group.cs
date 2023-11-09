@@ -8,7 +8,7 @@ namespace GeneralChat.Server.Models
         public int Id { get; set; }
         public int CreatorId { get; set; }
         public string Name { get; set; }
-        public DateTime CreationTime { get; set; }
+        public DateTime? CreationTime { get; set; }
 
         public virtual User User { get; set; } = new();
     }
