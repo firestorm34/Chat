@@ -9,7 +9,8 @@ namespace GeneralChat.Server.Models
 
         public string Nickname { get; set; }
 
-
+        public DateTime LastSeen { get; set; }
+        public bool IsOnline { get; set; }
 
     }
 }

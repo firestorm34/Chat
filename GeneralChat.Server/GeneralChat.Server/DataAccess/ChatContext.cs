@@ -39,10 +39,12 @@ namespace GeneralChat.Server.DataAccess
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<UserInGroup>(entity =>
-            {
-                entity.HasNoKey();
-            }
+                {
+                    entity.HasNoKey();
+                }
             );
+            modelBuilder.Entity<UnreadMessage>().HasKey(nameof(UnreadMessage.MessageId), nameof(UnreadMessage.UserId));
+            
         }
 
     }
