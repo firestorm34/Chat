@@ -17,6 +17,5 @@ namespace GeneralChat.Server.Repositories
         }
 
 
-
     }
 }

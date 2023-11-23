@@ -3,6 +3,7 @@ using System;
 using GeneralChat.Server.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GeneralChat.Server.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    partial class ChatContextModelSnapshot : ModelSnapshot
+    [Migration("20231111111727_AddedLastnSennNOnline")]
+    partial class AddedLastnSennNOnline
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,11 +41,17 @@ namespace GeneralChat.Server.Migrations
                     b.Property<int>("SecondUserId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("User1Id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("User2Id")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("FirstUserId");
+                    b.HasIndex("User1Id");
 
-                    b.HasIndex("SecondUserId");
+                    b.HasIndex("User2Id");
 
                     b.ToTable("Chats");
                 });
@@ -51,14 +59,25 @@ namespace GeneralChat.Server.Migrations
             modelBuilder.Entity("GeneralChat.Server.Models.Contact", b =>
                 {
                     b.Property<int>("OwnerId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OwnerId"));
 
                     b.Property<int>("ContactId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("ContactUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OwnerId1")
+                        .HasColumnType("integer");
+
                     b.HasKey("OwnerId");
 
-                    b.HasIndex("ContactId");
+                    b.HasIndex("ContactUserId");
+
+                    b.HasIndex("OwnerId1");
 
                     b.ToTable("Contacts");
                 });
@@ -81,12 +100,7 @@ namespace GeneralChat.Server.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Group");
                 });
@@ -163,10 +177,6 @@ namespace GeneralChat.Server.Migrations
 
                     b.HasKey("MessageId", "UserId");
 
-                    b.HasIndex("ChatId");
-
-                    b.HasIndex("UserId");
-
                     b.ToTable("UnreadMessages");
                 });
 
@@ -191,6 +201,9 @@ namespace GeneralChat.Server.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
+
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("IsOnline")
                         .HasColumnType("boolean");
@@ -237,6 +250,8 @@ namespace GeneralChat.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GroupId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -249,15 +264,15 @@ namespace GeneralChat.Server.Migrations
 
             modelBuilder.Entity("GeneralChat.Server.Models.UserInGroup", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("GroupId")
                         .HasColumnType("integer");
 
-                    b.HasKey("UserId", "GroupId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
 
                     b.HasIndex("GroupId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserInGroups");
                 });
@@ -368,14 +383,14 @@ namespace GeneralChat.Server.Migrations
             modelBuilder.Entity("GeneralChat.Server.Models.Chat", b =>
                 {
                     b.HasOne("GeneralChat.Server.Models.User", "User1")
-                        .WithMany("Chats")
-                        .HasForeignKey("FirstUserId")
+                        .WithMany()
+                        .HasForeignKey("User1Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GeneralChat.Server.Models.User", "User2")
                         .WithMany()
-                        .HasForeignKey("SecondUserId")
+                        .HasForeignKey("User2Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -388,13 +403,13 @@ namespace GeneralChat.Server.Migrations
                 {
                     b.HasOne("GeneralChat.Server.Models.User", "ContactUser")
                         .WithMany()
-                        .HasForeignKey("ContactId")
+                        .HasForeignKey("ContactUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GeneralChat.Server.Models.User", "Owner")
-                        .WithMany("Contacts")
-                        .HasForeignKey("OwnerId")
+                        .WithMany()
+                        .HasForeignKey("OwnerId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -403,33 +418,7 @@ namespace GeneralChat.Server.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("GeneralChat.Server.Models.Group", b =>
-                {
-                    b.HasOne("GeneralChat.Server.Models.User", null)
-                        .WithMany("Groups")
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("GeneralChat.Server.Models.Message", b =>
-                {
-                    b.HasOne("GeneralChat.Server.Models.Chat", "Chat")
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GeneralChat.Server.Models.User", "User")
-                        .WithMany("Messages")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Chat");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("GeneralChat.Server.Models.UnreadMessage", b =>
                 {
                     b.HasOne("GeneralChat.Server.Models.Chat", "Chat")
                         .WithMany()
@@ -437,29 +426,28 @@ namespace GeneralChat.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GeneralChat.Server.Models.Message", "Message")
-                        .WithMany("UnreadMessages")
-                        .HasForeignKey("MessageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("GeneralChat.Server.Models.User", "User")
-                        .WithMany("UnreadMessages")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Chat");
 
-                    b.Navigation("Message");
-
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GeneralChat.Server.Models.User", b =>
+                {
+                    b.HasOne("GeneralChat.Server.Models.Group", null)
+                        .WithMany("Users")
+                        .HasForeignKey("GroupId");
                 });
 
             modelBuilder.Entity("GeneralChat.Server.Models.UserInGroup", b =>
                 {
                     b.HasOne("GeneralChat.Server.Models.Group", "Group")
-                        .WithMany("UsersInGroup")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -526,32 +514,9 @@ namespace GeneralChat.Server.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GeneralChat.Server.Models.Chat", b =>
-                {
-                    b.Navigation("Messages");
-                });
-
             modelBuilder.Entity("GeneralChat.Server.Models.Group", b =>
                 {
-                    b.Navigation("UsersInGroup");
-                });
-
-            modelBuilder.Entity("GeneralChat.Server.Models.Message", b =>
-                {
-                    b.Navigation("UnreadMessages");
-                });
-
-            modelBuilder.Entity("GeneralChat.Server.Models.User", b =>
-                {
-                    b.Navigation("Chats");
-
-                    b.Navigation("Contacts");
-
-                    b.Navigation("Groups");
-
-                    b.Navigation("Messages");
-
-                    b.Navigation("UnreadMessages");
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

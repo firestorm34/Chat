@@ -21,12 +21,17 @@ namespace GeneralChat.Server.Services
             await unit.SaveAsync();
         }
 
-        public async Task EditText(int messageId, string newText)
+        public async Task<OperationResult> EditText(int messageId, string newText)
         {
-            Message message = await unit.MessageRepository.GetAsync(messageId);
-            message.Text = newText;
-            unit.MessageRepository.Update(message);
-            await unit.SaveAsync();
+            Message? message = await unit.MessageRepository.GetAsync(messageId);
+            if (message != null)
+            {
+                message.Text = newText;
+                unit.MessageRepository.Update(message);
+                await unit.SaveAsync();
+                return new OperationResult(OperationStatus.Successed);
+            }
+            return new OperationResult(OperationStatus.Failed, new Exception("Text is null"));
         }
 
         public async Task Delete(int id)
@@ -35,11 +40,15 @@ namespace GeneralChat.Server.Services
             await unit.SaveAsync();
         }
 
-        public async void ViewMessage(int id)
+        public async Task<OperationResult> ViewMessage(int id)
         {
-            Message message = await unit.MessageRepository.GetAsync(id);
-            await unit.UnreadMessageRepository.DeleteAsync(message.UserId, message.Id);
-            await unit.SaveAsync();
+            Message? message = await unit.MessageRepository.GetAsync(id);
+            if(message != null) { 
+                await unit.UnreadMessageRepository.DeleteAsync(message.UserId, message.Id);
+                await unit.SaveAsync();
+                return new OperationResult(OperationStatus.Successed);
+            }
+            return new OperationResult(OperationStatus.Failed, new Exception($"Message with id = {id} is not found in database"));
         }
 
         public async Task<List<Message>> GetAll()
@@ -47,7 +56,7 @@ namespace GeneralChat.Server.Services
             return await unit.MessageRepository.GetAllAsync();
         }
 
-        public async Task<Message> GetAsync(int id)
+        public async Task<Message?> GetAsync(int id)
         {
             return await unit.MessageRepository.GetAsync(id);
         }

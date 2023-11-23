@@ -38,16 +38,28 @@ namespace GeneralChat.Server.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<UserInGroup>(entity =>
-                {
-                    entity.HasNoKey();
-                }
-            );
+            modelBuilder.Entity<UserInGroup>().HasKey(nameof(UserInGroup.UserId),nameof(UserInGroup.GroupId));
+            // To create complicated key with 2+ fields as key 
             modelBuilder.Entity<UnreadMessage>().HasKey(nameof(UnreadMessage.MessageId), nameof(UnreadMessage.UserId));
-            
+            modelBuilder.Entity<Contact>(entity =>
+            {
+                entity.HasOne(e => e.Owner).WithMany(u => u.Contacts).HasForeignKey(e => e.OwnerId);
+                entity.HasOne(e => e.ContactUser).WithMany().HasForeignKey(e => e.ContactId);
+            });
+            modelBuilder.Entity<Chat>(entity =>
+            {
+                entity.HasOne(e => e.User1).WithMany(u => u.Chats).HasForeignKey(e => e.FirstUserId);
+                entity.HasOne(e => e.User2).WithMany().HasForeignKey(e => e.SecondUserId);
+            });
+            modelBuilder.Entity<UserInGroup>(entity =>
+            {
+                entity.HasOne(e => e.Group).WithMany(g => g.UsersInGroup).HasForeignKey(e => e.GroupId);
+            });
         }
 
     }
+    // It allows us to create template <T> for our dbContext
+
     //public class ChatContextFactory : IDesignTimeDbContextFactory<ChatContext>
     //{
 

@@ -15,9 +15,9 @@ namespace GeneralChat.Server.Models
         public DateTime? SentTime { get; set; }
         public int UserId { get; set; }
         public int ChatId { get; set; }
-        //public bool IsViewed { get; set; }
 
         public virtual User User { get; set; } = new ();
         public virtual Chat Chat { get; set; } = new ();
+        public virtual HashSet<UnreadMessage> UnreadMessages { get; set; } = new();
     }
 }

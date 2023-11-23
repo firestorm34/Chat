@@ -10,6 +10,6 @@ namespace GeneralChat.Server.Models
         public string Name { get; set; }
         public DateTime? CreationTime { get; set; }
 
-        public virtual List<User> Users { get; set; } = new();
+        public virtual HashSet<UserInGroup> UsersInGroup { get; set; } = new();
     }
 }

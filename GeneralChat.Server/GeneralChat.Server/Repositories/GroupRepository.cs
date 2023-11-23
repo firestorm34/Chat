@@ -10,5 +10,7 @@ namespace GeneralChat.Server.Repositories
         {
             this.context = context;
         }
+
+
     }
 }

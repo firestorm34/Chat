@@ -12,5 +12,11 @@ namespace GeneralChat.Server.Models
         public DateTime LastSeen { get; set; }
         public bool IsOnline { get; set; }
 
+        public HashSet<Chat> Chats { get; set; } = new();
+        public HashSet<Message> Messages { get; set; } = new();
+        public HashSet<Group> Groups { get; set; } = new HashSet<Group>();
+        public HashSet<Contact> Contacts { get; set; } = new HashSet<Contact>();
+        public HashSet<UnreadMessage> UnreadMessages { get; set; } = new();
+
     }
 }
